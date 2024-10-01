@@ -15,7 +15,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			'/ton-market': {
-				target: 'https://o6pwyd-88-201-232-88.ru.tuna.am/',
+				target: 'https://redacted.example.com/',
 				changeOrigin: true,
 			},
 		},
