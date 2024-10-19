@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useRoute } from 'vue-router';
+import { watch } from 'vue';
 
 import Bets from './components/Bets.vue';
 import Comments from './components/Comments.vue';
@@ -12,8 +12,17 @@ import { type Event, useEvents } from '@/services/events';
 
 const events = useEvents();
 
-const id = useRoute().params.id;
-events.select(id as Event['id']);
+const { eventID } = defineProps<{
+	eventID: Event['id'];
+}>();
+
+events.select(eventID);
+watch(
+	() => eventID,
+	value => {
+		events.select(value);
+	},
+);
 const { current: event } = storeToRefs(events);
 </script>
 

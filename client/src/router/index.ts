@@ -7,9 +7,10 @@ export const routes = [
 		component: () => import('@/views/HomeView/HomeView.vue'),
 	},
 	{
-		path: '/events/:id',
+		path: '/events/:eventID',
 		name: 'event',
 		component: () => import('@/views/EventView/EventView.vue'),
+		props: true,
 	},
 	{
 		path: '/account',

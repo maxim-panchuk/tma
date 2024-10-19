@@ -3,7 +3,6 @@ import { defineStore } from 'pinia';
 import { $API } from '@/api';
 
 export interface Bet {
-	collateral: number;
 	title: string;
 	percentage: string;
 	token: string;

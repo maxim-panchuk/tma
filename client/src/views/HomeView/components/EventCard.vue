@@ -16,7 +16,7 @@ const notifier = useNotifier();
 	<Card
 		style="cursor: pointer"
 		v-bind="event"
-		@click="useRedirect('event', { id: event.id })"
+		@click="useRedirect('event', { eventID: event.id })"
 	>
 		<template #info>
 			<Collateral :value="event.collateral" />
