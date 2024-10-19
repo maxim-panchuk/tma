@@ -1,6 +1,6 @@
 ARG NODE_VERSION=21.6.1-alpine
 
-FROM node:${NODE_VERSION} as builder
+FROM node:${NODE_VERSION} AS builder
 
 WORKDIR /app
 COPY package*.json ./
