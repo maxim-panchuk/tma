@@ -7,8 +7,8 @@ RUN go mod download
 COPY . .
 
 # Копируем сертификаты в директорию проекта для доступа
-COPY /etc/letsencrypt/live/tonpredictionmarket.com/fullchain.pem ./certs/fullchain.pem
-COPY /etc/letsencrypt/live/tonpredictionmarket.com/privkey.pem ./certs/privkey.pem
+COPY ./certs/fullchain.pem ./certs/fullchain.pem
+COPY ./certs/privkey.pem ./certs/privkey.pem
 
 RUN go build -o main .
 

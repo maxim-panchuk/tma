@@ -34,8 +34,10 @@ services:
       - "8443:8443"
     volumes:
       - static:/app/static
+      - /etc/letsencrypt/live/tonpredictionmarket.com:/etc/letsencrypt/live/tonpredictionmarket.com:ro # Монтируем сертификаты
     links:
       - database
+
 
 volumes:
   static:
