@@ -31,7 +31,7 @@ services:
     depends_on:
       - database
     ports:
-      - "8443:8443"
+      - "443:443"
     volumes:
       - static:/app/static
       - /etc/letsencrypt/live/tonpredictionmarket.com:/etc/letsencrypt/live/tonpredictionmarket.com:ro # Монтируем сертификаты

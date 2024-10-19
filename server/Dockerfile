@@ -21,6 +21,6 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/certs/fullchain.pem ./certs/fullchain.pem
 COPY --from=builder /app/certs/privkey.pem ./certs/privkey.pem
 
-EXPOSE 8443
+EXPOSE 443
 
 CMD ["./main"]
