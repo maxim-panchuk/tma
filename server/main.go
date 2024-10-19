@@ -53,7 +53,7 @@ func testData() {
 	e := &market.Event{
 		Tag:      market.Crypto,
 		LogoLink: "/img/bootcamp.jpg",
-		Title:    "Will TonMarket win Moscow Bootcamp?",
+		Title:    "Will TonMarket be in top-3 of Moscow Bootcamp?",
 		BetMap: map[token.Token]*market.Bet{
 			token.A: {
 				Token:    token.A,
