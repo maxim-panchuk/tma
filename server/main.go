@@ -46,7 +46,7 @@ func main() {
 
 	testData()
 
-	log.Fatal(e.StartTLS(fmt.Sprintf(":%v", config.Config.Port), "server.crt", "server.key"))
+	log.Fatal(e.Start(fmt.Sprintf(":%v", config.Config.Port)))
 }
 
 func testData() {
