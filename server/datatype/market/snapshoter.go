@@ -94,6 +94,7 @@ func (m *Market) snapshotBets(_ context.Context, e Event, state *eventState) []*
 			Token:      t,
 			Title:      b.Title,
 			Percentage: utils.FloatToString(state.betStateMap[t].percentage),
+			LogoLink:   b.LogoLink,
 		}
 		betDTOList = append(betDTOList, bDTO)
 	}
