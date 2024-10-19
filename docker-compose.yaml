@@ -5,19 +5,19 @@ services:
     image: postgres
     restart: always
     environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: tma
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tma
     ports:
-        - "5432:5432"
+      - "5432:5432"
     volumes:
-        - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
 
   client:
     container_name: client
     build:
-        context: ./client
-        dockerfile: Dockerfile
+      context: ./client
+      dockerfile: Dockerfile
     volumes:
       - static:/app/dist
 
@@ -35,7 +35,7 @@ services:
     volumes:
       - static:/app/static
     links:
-      - "database"
+      - database
 
 volumes:
   static:

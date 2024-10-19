@@ -46,7 +46,7 @@ func main() {
 
 	testData()
 
-	log.Fatal(e.StartTLS(fmt.Sprintf(":%v", config.Config.Port), "fullchain.pem", "privkey.pem"))
+	log.Fatal(e.StartTLS(fmt.Sprintf(":%v", config.Config.Port), "./certs/fullchain.pem", "./certs/privkey.pem"))
 }
 
 func testData() {
