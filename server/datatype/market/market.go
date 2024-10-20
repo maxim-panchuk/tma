@@ -139,6 +139,12 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 }
 
 func (m *Market) tryCheckIfDepositDelivered(ctx context.Context, depositReq *DepositReq) (bool, error) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("[ALARM] Recovered in tryCheckIfDepositDelivered:", r)
+		}
+	}()
+
 	depositReq.Time = depositReq.Time.Add(20 * time.Second)
 	userRawAddress, err := m.persistor.getUserAddressByUncheckedDealID(ctx, depositReq.ID)
 	if err != nil {
