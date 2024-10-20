@@ -114,14 +114,6 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 				continue
 			}
 
-			isDepositDelivered, _ := m.tryCheckIfDepositDelivered(ctx, depositReq)
-			if isDepositDelivered {
-				if err := m.confirmSuccessTransaction(ctx, depositReq); err != nil {
-					log.Printf("[ERROR] confirm success transaction failed: %s\n\n", err.Error())
-				}
-				continue
-			}
-
 			attempts, err := m.persistor.attemptDeal(ctx, depositReq.ID)
 			if err != nil {
 				m.depositReqCh <- depositReq
@@ -130,6 +122,14 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 
 			if attempts > 5 {
 				log.Printf("[ERROR] deal %v out of attempts\n\n", attempts)
+				continue
+			}
+
+			isDepositDelivered, _ := m.tryCheckIfDepositDelivered(ctx, depositReq)
+			if isDepositDelivered {
+				if err := m.confirmSuccessTransaction(ctx, depositReq); err != nil {
+					log.Printf("[ERROR] confirm success transaction failed: %s\n\n", err.Error())
+				}
 				continue
 			}
 
