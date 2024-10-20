@@ -100,6 +100,7 @@ func (m *Market) Deposit(_ context.Context, dr *DepositReq) error {
 func (m *Market) checkIncomeTransactions(ctx context.Context) {
 	go func() {
 		for depositReq := range m.depositReqCh {
+			// Проверяем статус депозита
 			if depositReq.DepositStatus == ERROR {
 				if err := m.persistor.declineDeal(ctx, depositReq.ID); err != nil {
 					log.Printf("[ERROR] check income transaction failed, deal_id: %s, %s\n\n",
@@ -109,11 +110,13 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 				continue
 			}
 
+			// Если время ещё не прошло, повторно отправляем запрос в канал
 			if depositReq.Time.Add(20 * time.Second).After(time.Now()) {
 				m.depositReqCh <- depositReq
 				continue
 			}
 
+			// Проверяем количество попыток
 			attempts, err := m.persistor.attemptDeal(ctx, depositReq.ID)
 			if err != nil {
 				m.depositReqCh <- depositReq
@@ -125,7 +128,14 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 				continue
 			}
 
-			isDepositDelivered, _ := m.tryCheckIfDepositDelivered(ctx, depositReq)
+			// Проверяем, был ли депозит доставлен
+			isDepositDelivered, err := m.tryCheckIfDepositDelivered(ctx, depositReq)
+			if err != nil {
+				log.Printf("[ERROR] tryCheckIfDepositDelivered failed: %s\n\n", err.Error())
+				m.depositReqCh <- depositReq
+				continue
+			}
+
 			if isDepositDelivered {
 				if err := m.confirmSuccessTransaction(ctx, depositReq); err != nil {
 					log.Printf("[ERROR] confirm success transaction failed: %s\n\n", err.Error())
@@ -139,9 +149,11 @@ func (m *Market) checkIncomeTransactions(ctx context.Context) {
 }
 
 func (m *Market) tryCheckIfDepositDelivered(ctx context.Context, depositReq *DepositReq) (bool, error) {
+	var err error // Объявляем err заранее
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("[ALARM] Recovered in tryCheckIfDepositDelivered:", r)
+			log.Printf("[ALARM] Recovered in tryCheckIfDepositDelivered: %v", r)
+			err = fmt.Errorf("panic in tryCheckIfDepositDelivered: %v", r)
 		}
 	}()
 
@@ -159,6 +171,7 @@ func (m *Market) tryCheckIfDepositDelivered(ctx context.Context, depositReq *Dep
 	for _, trx := range trxList {
 		isDepositTransaction, err := m.isDepositTransaction(ctx, trx, depositReq)
 		if err != nil {
+			// Пропускаем ошибочные транзакции
 			continue
 		}
 		if isDepositTransaction {
@@ -166,16 +179,12 @@ func (m *Market) tryCheckIfDepositDelivered(ctx context.Context, depositReq *Dep
 		}
 	}
 
-	return false, nil
+	return false, err
 }
 
 func (m *Market) isDepositTransaction(_ context.Context, trx ton.Transaction, depositReq *DepositReq) (bool, error) {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Println("[ALARM] Recovered in isDepositTransaction", r)
-		}
-	}()
 	var t wallet.TextComment
+	// Здесь может произойти паника
 	if err := tlb.Unmarshal((*boc.Cell)(&trx.Msgs.OutMsgs.Values()[0].Value.Body.Value), &t); err != nil {
 		return false, err
 	}
