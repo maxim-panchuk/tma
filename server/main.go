@@ -75,12 +75,12 @@ func testData() {
 			token.A: {
 				Token:    token.A,
 				Title:    "Trump",
-				LogoLink: "/img/trump.jpg",
+				LogoLink: "/img/Elections.png",
 			},
 			token.B: {
 				Token:    token.B,
 				Title:    "Harris",
-				LogoLink: "/img/harris.jpg",
+				LogoLink: "/img/Elections.png",
 			},
 		},
 	}

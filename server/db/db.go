@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"errors"
+	appconfig "github.com/TON-Market/tma/server/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"sync"
@@ -20,13 +21,9 @@ var (
 	singleton *pgxpool.Pool
 )
 
-const dbUrl = "postgresql://postgres:password@database/tma"
-
-//const dbUrl = "postgresql://postgres:password@localhost:5432/tma"
-
 func Get() *pgxpool.Pool {
 	once.Do(func() {
-		config, err := pgxpool.ParseConfig(dbUrl)
+		config, err := pgxpool.ParseConfig(appconfig.Config.DatabaseURL)
 		if err != nil {
 			log.Fatalf("parse db config failed: %v", err)
 		}

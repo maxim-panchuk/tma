@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/TON-Market/tma/server/config"
 	"github.com/TON-Market/tma/server/datatype/market"
 	"github.com/TON-Market/tma/server/datatype/token"
 	"github.com/TON-Market/tma/server/utils"
@@ -88,7 +89,7 @@ func (h *handler) Pay(c echo.Context) error {
 
 	payResp := &PayResp{
 		Message: &Message{
-			Addr:    market.BANK_ADDR,
+			Addr:    config.Config.Market.BankAddr,
 			Amount:  gramsStr,
 			Payload: payload,
 		},
@@ -139,8 +140,6 @@ type CloseReq struct {
 	SecretKey string      `json:"secretKey"`
 }
 
-const SECRET_KEY = "REDACTED-ADMIN-KEY"
-
 func (h *handler) Close(c echo.Context) error {
 	ctx := context.TODO()
 	lg := log.WithContext(ctx).WithField("prefix", "Close")
@@ -155,8 +154,8 @@ func (h *handler) Close(c echo.Context) error {
 		return c.JSON(HttpResErrorWithLog(err.Error(), http.StatusBadRequest, lg))
 	}
 
-	if closeReq.SecretKey != SECRET_KEY {
-		return c.JSON(HttpResErrorWithLog(err.Error(), http.StatusBadRequest, lg))
+	if closeReq.SecretKey != config.Config.AdminSecretKey {
+		return c.JSON(HttpResErrorWithLog("invalid secret key", http.StatusUnauthorized, lg))
 	}
 
 	eventId, err := uuid.Parse(closeReq.DealID)

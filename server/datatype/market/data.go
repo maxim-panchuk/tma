@@ -11,11 +11,6 @@ import (
 type DepositStatus int
 
 const (
-	BANK_ADDR = "EQBRW9rjhRUNL-Sy4swYbMzm2MgvlhC2DWIZFhYp2JnSoJaA"
-	SEED      = "example consider fiscal mail guitar tiger duck exhibit ancient series differ wealth mix kitchen cactus upgrade unable yellow impact confirm denial mesh during dove"
-)
-
-const (
 	OK DepositStatus = iota
 	ERROR
 )

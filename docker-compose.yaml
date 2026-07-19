@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: tma
     ports:
       - "5432:5432"
@@ -24,7 +24,11 @@ services:
   server:
     container_name: server
     environment:
-      - TONPROOF_PAYLOAD_SIGNATURE_KEY=value
+      - TONPROOF_PAYLOAD_SIGNATURE_KEY=${TONPROOF_PAYLOAD_SIGNATURE_KEY:?set it in .env}
+      - ADMIN_SECRET_KEY=${ADMIN_SECRET_KEY:?set it in .env}
+      - WALLET_SEED=${WALLET_SEED:?set it in .env}
+      - BANK_ADDR=${BANK_ADDR:?set it in .env}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-password}@database/tma
     build:
       context: ./server
       dockerfile: Dockerfile

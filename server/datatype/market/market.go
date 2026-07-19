@@ -3,6 +3,7 @@ package market
 import (
 	"context"
 	"fmt"
+	"github.com/TON-Market/tma/server/config"
 	"github.com/TON-Market/tma/server/datatype/token"
 	"github.com/TON-Market/tma/server/db"
 	"github.com/TON-Market/tma/server/utils"
@@ -272,7 +273,7 @@ func GetMarket() *Market {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		pk, err := wallet.SeedToPrivateKey(SEED)
+		pk, err := wallet.SeedToPrivateKey(config.Config.Market.WalletSeed)
 		if err != nil {
 			log.Fatalln(err)
 		}
